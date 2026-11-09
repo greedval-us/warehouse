@@ -1,0 +1,50 @@
+{
+  "name": "warehouse",
+  "productName": "Warehouse",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Локальное настольное приложение для ведения склада.",
+  "author": "Warehouse",
+  "type": "module",
+  "main": "src/main/index.js",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "dev": "npm run build:preload && concurrently -k -s first \"vite\" \"vite build --config vite.preload.config.js --watch\" \"wait-on http://127.0.0.1:5174 build/main/preload.cjs && cross-env WAREHOUSE_DEV_SERVER_URL=http://127.0.0.1:5174 node scripts/runElectron.mjs\"",
+    "start": "npm run build && node scripts/runElectron.mjs",
+    "build:preload": "vite build --config vite.preload.config.js",
+    "build:client": "npm run build:preload && vite build",
+    "build": "npm run build:client",
+    "icons": "node scripts/generateIcons.mjs",
+    "test": "node --test tests/main/*.test.js tests/shared/*.test.js tests/renderer/*.test.js",
+    "check": "npm test && npm run build",
+    "test:desktop": "npm run build && node scripts/checkDesktop.mjs",
+    "pack:win": "npm run build && electron-builder --config electron-builder.config.cjs --win --dir",
+    "build:win": "npm run build && electron-builder --config electron-builder.config.cjs --win nsis portable"
+  },
+  "dependencies": {
+    "electron-log": "5.4.3",
+    "lucide-vue-next": "0.536.0",
+    "pinia": "3.0.3",
+    "vue": "3.5.44",
+    "vue-router": "4.5.1"
+  },
+  "overrides": {
+    "app-builder-lib": { "tar": "7.5.21" },
+    "builder-util-runtime": "9.7.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "6.0.1",
+    "autoprefixer": "10.4.21",
+    "concurrently": "9.2.0",
+    "cross-env": "10.1.0",
+    "electron": "38.8.6",
+    "electron-builder": "24.13.3",
+    "pe-library": "2.0.1",
+    "postcss": "8.5.31",
+    "resedit": "3.1.0",
+    "tailwindcss": "3.4.17",
+    "vite": "7.3.7",
+    "wait-on": "8.0.4"
+  }
+}
